@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pr-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Produto</title>
+</head>
+<body>
+    <h1 style="text-align: center;">Cadastrar Fornecedores</h1>
+    <form th:action="@{/fornecedores/salvar}" method="POST" th:object="${fornecedor}">
+ 
+        <input type="hidden" th:field="*{idFornecedor}" />
+ 
+        <label for="nomeFornecedor">Nome:</label>
+        <input type="text" name="nomeFornecedor" th:field="*{nomeFornecedor}" />
+        <br />
+        <label for="cnpjFornecedor">CNPJ:</label>
+        <input type="text" name="cnpjFornecedor" th:field="*{cnpjFornecedor}" />
+        <br />
+ 
+        <label for="telefoneFornecedor">Telefone:</label>
+        <input type="text" name="telefoneFornecedor" th:field="*{telefoneFornecedor}" />
+        <br />
+ 
+        <label for="enderecoFornecedor">Endereço:</label>
+        <input type="text" name="enderecoFornecedor" th:field="*{enderecoFornecedor}" />
+        <br />
+ 
+        <label for="cidadeFornecedor">Cidade:</label>
+        <input type="text" name="cidadeFornecedor" th:field="*{cidadeFornecedor}" />
+        <br />
+ 
+        <input type="submit" value="Salvar">
+ 
+    </form>
+   
+</body>
+</html>

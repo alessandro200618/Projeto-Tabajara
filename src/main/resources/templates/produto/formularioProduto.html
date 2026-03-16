@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pr-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Produto</title>
+</head>
+<body>
+    <h1 style="text-align: center;">Cadastrar Produto</h1>
+    <form th:action="@{/produtos/salvar}" method="POST" th:object="${produto}">
+ 
+        <input type="hidden" name="idProduto" th:field="*{idProduto}" />
+ 
+        <label for="descricaoProduto">Descrição:</label>
+        <input type="text" name="descricaoProduto" th:field="*{descricaoProduto}" />
+        <br />
+ 
+        <label for="valorProduto">Valor:</label>
+        <input type="text" name="valorProduto" th:field="*{valorProduto}" />
+        <br />
+ 
+        <label for="unidadeProduto">Unidade:</label>
+        <input type="text" name="unidadeProduto" th:field="*{unidadeProduto}" />
+        <br />
+ 
+        <label for="marcaProduto">Marca:</label>
+        <input type="text" name="marcaProduto" th:field="*{marcaProduto}" />
+        <br />
+        
+<label for="fornecedor">Fornecedor:</label>
+<select th:field="*{fornecedor}">
+    <option value="" disabled selected>Selecione o fornecedor</option>
+
+    <option th:each="fornecedor : ${fornecedores}"
+            th:text="${fornecedor.nomeFornecedor}"
+            th:value="${fornecedor.idFornecedor}">
+    </option>
+
+</select>
+        <input type="submit" value="Salvar">
+ 
+    </form>
+   
+</body>
+</html>

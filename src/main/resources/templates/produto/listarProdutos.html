@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listagem de Produtos</title>
+</head>
+<body>
+    <h1>Listagem de Produtos</h1>
+
+    <h3><a th:href="@{/produtos/criar}">Adicionar Novo Produto</a></h3>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Descrição</th>
+                <th>Valor</th>
+                <th>Unidade</th>
+                <th>Marca</th>
+                <th>Fornecedor</th>
+                <th colspan="2">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="produto : ${produtos}">
+                <td th:text="${produto.idProduto}">ID</td>
+                <td th:text="${produto.descricaoProduto}">Descrição</td>
+                <td th:text="${produto.valorProduto}">Valor</td>
+                <td th:text="${produto.unidadeProduto}">Unidade</td>
+                <td th:text="${produto.marcaProduto}">Marca</td>
+                <td th:text="${produto.fornecedor.nomeFornecedor}">Fornecedor</td>
+                <td>
+                    <a th:href="@{/produtos/editar/{id}(id=${produto.idProduto})}">Editar</a> |
+                    <a th:href="@{/produtos/excluir/{id}(id=${produto.idProduto})}" onclick="return confirm('Tem certeza que deseja excluir este produto?');">Excluir</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+        <a th:href="@{/tabajara}">Voltar</a>
+</body>
+</html>

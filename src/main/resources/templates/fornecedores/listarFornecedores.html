@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listagem de Fornecedores</title>
+</head>
+<body>
+    <h1>Listagem de Fornecedores</h1>
+
+    <h3><a th:href="@{/fornecedores/criar}">Adicionar Novo Fornecedor</a></h3>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>CNPJ</th>
+                <th>Endereço</th>
+                <th>Telefone</th>
+                <th>Cidade</th>
+                <th colspan="2">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="fornecedor : ${fornecedores}">
+                <td th:text="${fornecedor.idFornecedor}">ID</td>
+                <td th:text="${fornecedor.nomeFornecedor}">Nome</td>
+                <td th:text="${fornecedor.cnpjFornecedor}">CNPJ</td>
+                <td th:text="${fornecedor.enderecoFornecedor}">Endereço</td>
+                <td th:text="${fornecedor.telefoneFornecedor}">Telefone</td>
+                <td th:text="${fornecedor.cidadeFornecedor}">Cidade</td>
+                <td>
+                    <a th:href="@{/fornecedores/editar/{id}(id=${fornecedor.idFornecedor})}">Editar</a> |
+                    <a th:href="@{/fornecedores/excluir/{id}(id=${fornecedor.idFornecedor})}" onclick="return confirm('Tem certeza que deseja excluir este fornecedor?');">Excluir</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+        <a th:href="@{/tabajara}">Voltar</a>
+</body>
+</html>
