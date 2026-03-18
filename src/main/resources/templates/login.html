@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+        
+<h1>Bem-vindo(a) ao seu Login no Sistema</h1>
+
+<form th:action="@{login}" method="post">
+    <div>
+        <label for="username">Login:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+
+    <div>
+        <label for="password">Senha:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+
+    <button type="submit">Entrar no Site</button>
+</form>
+<p th:if="${param.error}"> Credenciais invalidas. tente novamente.</p>
+<p th:if="${param.logout}"> Logout efetuado</p>
+<form action="/tabajara" method="get">
+    <button type="submit"> Voltar para Home</button>
+</form>
+</body>
+</html>

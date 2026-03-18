@@ -1,0 +1,30 @@
+package br.com.projetotabajara.tabajara.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Usuario {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer idUsuario;
+
+    @Column(nullable = false, length = 100)
+    private String nomeUsuario;
+
+    @Column(nullable = false, length = 100)
+    private String emailUsuario;
+
+    @Column(nullable = false, length = 40)
+    private String loginUsuario;
+
+    @Column(nullable = false, length = 40)
+    private String senhaUsuario;
+
+    private String role = "ROLE_USER";
+}
