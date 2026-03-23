@@ -17,7 +17,7 @@ import br.com.projetotabajara.tabajara.service.FornecedorService;
 
 @Controller
 @RequestMapping("/fornecedores")
-public class FornecedorControler {
+public class FornecedorController {
 
     @Autowired
     private FornecedorService serviceFornecedor;
