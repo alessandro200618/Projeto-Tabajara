@@ -1,5 +1,7 @@
 package br.com.projetotabajara.tabajara.entity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,7 +13,7 @@ import lombok.*;
 public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO) 
     private Integer idUsuario;
 
     @Column(nullable = false, length = 100)
@@ -27,5 +29,9 @@ public class Usuario {
     @Column(nullable = false, length = 100)
     private String senhaUsuario;
 
-    private String role = "ROLE_USER";
+    private String role = "ROLE_USER";          
+
+    private String resetToken;
+
+    private LocalDateTime tokenExpiracao;
 }

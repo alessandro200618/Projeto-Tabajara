@@ -14,6 +14,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
+        .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                         "/login",
@@ -21,7 +22,10 @@ public class SecurityConfig {
                         "/usuarios/criar",
                         "/usuarios/salvar",
                         "/css/**",
-                        "/images/**"
+                        "/images/**",
+                        "usuarios/**",
+                        "esqueci-senha/**",
+                        "redefinir-senha/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )
