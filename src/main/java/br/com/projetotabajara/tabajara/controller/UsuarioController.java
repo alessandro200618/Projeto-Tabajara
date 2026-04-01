@@ -22,7 +22,7 @@ public class UsuarioController {
     public String listar(Model model) {
         List<Usuario> usuarios = usuarioService.listarTodos();
         model.addAttribute("usuarios", usuarios);
-        return "usuario/listaUsuarios";
+        return "usuario/listarUsuario";
     }
 
     // FORMULÁRIO DE CRIAÇÃO

@@ -13,13 +13,12 @@ import br.com.projetotabajara.tabajara.repository.UsuarioRepository;
 public class UsuarioService {
 
     @Autowired
-    private UsuarioRepository usuarioRepository; 
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
     public Usuario save(Usuario usuario){
-        //Criptografar a senha antes de salvar
         usuario.setSenhaUsuario(passwordEncoder.encode(usuario.getSenhaUsuario()));
         return usuarioRepository.save(usuario);
     }
@@ -31,6 +30,7 @@ public class UsuarioService {
     public void excluir(Integer id){
         usuarioRepository.deleteById(id);
     }
+
     public Usuario findAll(Integer id){
         return usuarioRepository.findById(id).orElse(null);
     }
