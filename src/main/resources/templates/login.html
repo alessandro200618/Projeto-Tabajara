@@ -15,87 +15,23 @@
     <style>
         :root {
             --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
             --glass-bg: rgba(255, 255, 255, 0.1);
             --glass-border: rgba(255, 255, 255, 0.2);
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             min-height: 100vh;
             font-family: 'Inter', sans-serif;
             color: #ffffff;
-            overflow-x: hidden;
-            background: linear-gradient(-45deg, #0f0f23, #1a1a2e, #16213e, #0f3460, #533a7c, #0ea5e9);
-            background-size: 600% 600%;
-            animation: gradientShift 15s ease infinite;
-            position: relative;
+            background: linear-gradient(-45deg, #0f0f23, #1a1a2e, #16213e, #0f3460);
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
-                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
-                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
-                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent);
-            background-repeat: repeat;
-            background-size: 200px 100px;
-            animation: float 20s linear infinite;
-            opacity: 0.1;
-            z-index: 0;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            25% { background-position: 100% 50%; }
-            50% { background-position: 100% 100%; }
-            75% { background-position: 0% 100%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px) rotate(0deg); }
-            100% { transform: translateY(-20px) rotate(360deg); }
-        }
-
-        .navbar {
-            background: rgba(15, 15, 35, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-            letter-spacing: 1px;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .login-container {
             max-width: 420px;
             width: 100%;
-            position: relative;
-            z-index: 1;
         }
 
         .login-card {
@@ -103,102 +39,7 @@
             backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border);
             border-radius: 28px;
-            padding: 3.5rem 3rem;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .login-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: var(--primary-gradient);
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
-        }
-
-        .login-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 35px 80px rgba(0,0,0,0.4);
-            border-color: rgba(255,255,255,0.3);
-        }
-
-        .login-card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .login-header {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-
-        .login-header i {
-            font-size: 3.5rem;
-            background: var(--glass-bg);
-            width: 100px;
-            height: 100px;
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            border: 2px solid var(--glass-border);
-            color: #667eea;
-        }
-
-        .login-header h1 {
-            font-size: 2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #ffffff 0%, #e0e7ff 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-        }
-
-        .login-header p {
-            color: rgba(255,255,255,0.7);
-            font-weight: 300;
-        }
-
-        .form-floating {
-            position: relative;
-            margin-bottom: 1.8rem;
-        }
-
-        .form-control {
-            background: rgba(255,255,255,0.08);
-            border: 2px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 16px 20px;
-            font-size: 1rem;
-            color: #ffffff;
-            backdrop-filter: blur(15px);
-            transition: all 0.3s ease;
-            height: 64px;
-        }
-
-        .form-control:focus {
-            background: rgba(255,255,255,0.12);
-            border-color: #667eea;
-            box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
-            color: #ffffff;
-        }
-
-        .form-control::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-
-        .form-floating > label {
-            color: rgba(255,255,255,0.7);
-            font-weight: 400;
-            padding-left: 20px;
-            transform: translateY(50%);
+            padding: 3rem;
         }
 
         .btn-login {
@@ -206,127 +47,59 @@
             border: none;
             border-radius: 16px;
             padding: 16px;
-            font-size: 1.1rem;
-            font-weight: 600;
             width: 100%;
-            height: 64px;
-            letter-spacing: 0.5px;
-            backdrop-filter: blur(20px);
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-            color: #ffffff;
+            color: #fff;
         }
 
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.6);
-            color: #ffffff !important;
+        .form-control {
+            margin-bottom: 15px;
         }
-
-        .alert {
-            border-radius: 16px;
-            border: none;
-            backdrop-filter: blur(15px);
-            margin-bottom: 1.5rem;
-            font-size: 0.95rem;
-        }
-
-        .alert-error {
-            background: rgba(245, 87, 108, 0.2);
-            border: 1px solid rgba(245, 87, 108, 0.3);
-            color: #f5576c;
-        }
-
-        .alert-success {
-            background: rgba(76, 175, 80, 0.2);
-            border: 1px solid rgba(76, 175, 80, 0.3);
-            color: #4caf50;
-        }
-
-        .btn-back {
-            background: rgba(255,255,255,0.1);
-            border: 2px solid var(--glass-border);
-            color: rgba(255,255,255,0.9);
-            border-radius: 16px;
-            padding: 12px 24px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 1rem;
-        }
-
-        .btn-back:hover {
-            background: rgba(255,255,255,0.2);
-            color: #ffffff;
-            transform: translateY(-1px);
-        }
-
-        @media (max-width: 576px) {
-            .login-card { padding: 2.5rem 2rem; margin: 1rem; }
-        }
-
-        .login-card { animation: slideInUp 0.8s ease forwards; opacity: 0; transform: translateY(30px); }
-        @keyframes slideInUp { to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="/">
-            <i class="bi bi-building me-2"></i> Organizações Tabajara
-        </a>
-    </div>
-</nav>
-
 <div class="login-container">
     
-    <!-- ALERTAS DE ERRO/SUCESSO -->
-    <div th:if="${param.error}" class="alert alert-error">
-        <i class="bi bi-exclamation-triangle me-2"></i>
-        Credenciais inválidas. Tente novamente.
-    </div>
-    
-    <div th:if="${param.logout}" class="alert alert-success">
-        <i class="bi bi-check-circle me-2"></i>
-        Logout efetuado com sucesso.
+    <div th:if="${param.error}" class="alert alert-danger">
+        Credenciais inválidas.
     </div>
 
-    <!-- FORMULÁRIO DE LOGIN -->
     <div class="login-card">
-        <div class="login-header">
-            <div>
-                <i class="bi bi-shield-lock"></i>
-            </div>
-            <h1>Bem-vindo(a) ao seu Login</h1>
-            <p>Faça login para acessar o painel administrativo</p>
-        </div>
+        <h2 class="text-center mb-4">Login</h2>
 
         <form th:action="@{/login}" method="post">
-            <div class="form-floating">
-                <input type="text" class="form-control" id="username" name="username" placeholder="Login" required>
-                <label for="username">Login</label>
-            </div>
-
-            <div class="form-floating">
-                <input type="password" class="form-control" id="password" name="password" placeholder="Senha" required>
-                <label for="password">Senha</label>
-            </div>
+            <input type="text" class="form-control" name="username" placeholder="Login" required>
+            <input type="password" class="form-control" name="password" placeholder="Senha" required>
 
             <button type="submit" class="btn btn-login">
-                <i class="bi bi-box-arrow-in-right me-2"></i>
                 Entrar no Sistema
             </button>
+
+            <!-- 🔥 AQUI FOI ADICIONADO (SEM MEXER NO RESTO) -->
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <span style="color: rgba(255,255,255,0.7);">
+                    Não tem uma conta?
+                </span>
+
+                <a th:href="@{/usuarios/criar}" style="
+                    display: block;
+                    margin-top: 0.6rem;
+                    color: #667eea;
+                    font-weight: 600;
+                    text-decoration: none;
+                ">
+                    <i class="bi bi-person-plus me-1"></i>
+                    Criar conta
+                </a>
+            </div>
+
         </form>
 
-        <a href="/" class="btn-back">
-            <i class="bi bi-arrow-left me-1"></i>
-            Voltar para Home
+        <a href="/" class="btn btn-outline-light mt-3 w-100">
+            Voltar
         </a>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

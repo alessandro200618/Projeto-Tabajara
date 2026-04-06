@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
     Optional<Usuario> findByLoginUsuario(String loginUsuario);
-    List<Usuario> findByEmailUsuario(String emailUsuario);
+    Optional<Usuario> findByEmailUsuario(String emailUsuario);
     
     Optional<Usuario> findByResetToken(String resetToken);
 }
