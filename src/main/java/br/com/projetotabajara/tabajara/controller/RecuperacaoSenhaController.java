@@ -39,11 +39,20 @@ public class RecuperacaoSenhaController {
     }
 
     @PostMapping("/redefinir-senha")
-    public String salvarNovaSenha(@RequestParam String token, @RequestParam String novaSenha, Model model) {
+    public String salvarNovaSenha(@RequestParam String token, @RequestParam String novaSenha, @RequestParam String confirmarSenha, Model model) {
+        if (!novaSenha.equals(confirmarSenha)) {
+            model.addAttribute("erro", "As senhas não coincidem.");
+            model.addAttribute("token", token);
+            return "redefinir-senha";
+        }
         boolean sucesso = usuarioService.redefinirSenha(token, novaSenha);
         if (sucesso) {
             model.addAttribute("mensagem", "Senha redefinida com sucesso!");
-        } 
-        return "redirect:/login?resetSucesso";
+            return "redirect:/login?resetSucesso";
+        } else {
+            model.addAttribute("erro", "Erro ao redefinir senha. Token inválido ou expirado.");
+            model.addAttribute("token", token);
+            return "redefinir-senha";
+        }
     }
 }
