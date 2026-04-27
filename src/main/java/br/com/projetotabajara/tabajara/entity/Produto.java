@@ -1,6 +1,8 @@
 package br.com.projetotabajara.tabajara.entity;
 
 
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +27,7 @@ public class Produto {
     
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO) // auto cria id aleatórios estratégia do próprio método
+    @GeneratedValue(strategy = GenerationType.AUTO) 
     private Integer idProduto;
 
     @Column (nullable = false, length = 40)
@@ -40,13 +43,10 @@ public class Produto {
     private String marcaProduto;
 
     @ManyToOne
-    @JoinColumn(name= "idFornecedor_fk") // deu nome a chave estrangeira
+    @JoinColumn(name= "idFornecedor_fk") 
     private Fornecedor fornecedor;
 
-
+    @OneToMany(mappedBy = "produto")
+    private List<ItemDoPedido> itens;
 }
 
-// método construtor cheio = armazena tudo, lista depois
-// método construtor vazio = armazena espaço na memória para produtos novos.
-// set atribui valor a varivel
-// get pega o valor no bd
