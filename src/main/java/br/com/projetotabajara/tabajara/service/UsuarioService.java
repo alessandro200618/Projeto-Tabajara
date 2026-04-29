@@ -33,7 +33,8 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    public Usuario findAll(Integer id) {
+    public Usuario findAll() {
+        Integer id = null;
         return usuarioRepository.findById(id).orElse(null);
     }
 

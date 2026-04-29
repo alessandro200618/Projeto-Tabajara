@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <datalist id="listarUsuarios">
+    <option th:each="u : ${usuarios}" 
+            th:value="${u.idUsuario + ' - ' + u.nomeUsuario}"> 
+    </option>
+   </datalist>
+
+   <datalist id="listarProdutos">
+    <option th:each="p : ${produtos}" 
+            th:value="${p.idProduto + ' - ' + p.descricaoProduto}"
+            th:attr="data-preco=${p.valorProduto}">
+    </option>
+   </datalist>
+
+   <p> I. Identificação do Usuário</p>
+   <label for="usuario">Usuário:</label>
+   <input list="listarUsuarios" id="usuario" type="text"
+   placeholder="Digite o nome ou o codigo do usuário">
+
+   <p>II. Adicionar produto ao pedido</p>
+   <label for="produto">Produto:</label>
+   <input list="listarProdutos" id="produto" type="text"
+   placeholder="Digite o nome ou o codigo do produto">
+
+   <label for="quantidade">Quantidade:</label>
+   <input type="number" id="quantidade" placeholder="0" min="1">
+   <button type="button" onclick="adicionarItem()">
+    <span>+</span>Adicionar
+   </button>
+   <table>
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Quantidade</th>
+                <th>Preço unitário</th>
+                <th>SubTotal</th>
+                <th>Ação</th>
+            </tr>
+        </thead>
+        <tbody id="table-itens">
+            <tr id="empty-row">
+                <td colspan="5">Nenhum item adicionado</td>
+            </tr>
+    </tbody>
+</table>
+<span>Total do Pedido</span>
+<span>R$ <span id="totalPedido">0.00</span></span>
+
+<button onclick="salvarPedido()">Confirmar e salvar Pedido</button>
+76% de armazenamento usado … Se você atingir o limite, não poderá criar, editar ou fazer upload de arquivos. Compartilhe 100 GB com sua família por R$ 4,50 durante 3 meses R$ 9,99.
+    <script>
+        let itens = [];
+
+        function adicionarItem() {
+            let produtoInput = document.getElementById("produto").value;
+            let quantidade = document.getElementById("quantidade").value;
+
+            if (!produtoInput || quantidade <= 0) {
+                alert("Preencha corretamente o produto e a quantidade!");
+                return;
+            }
+
+            let partes = produtoInput.split(" - ");
+            let produtoId = partes[0];
+            let produtoNome = partes[1];
+
+            let options = document.querySelectorAll("#listaProdutos option");
+            let preco = null;
+
+            options.forEach(opt => {
+                if (opt.value === produtoInput) {
+                    preco = opt.getAttribute("data-preco");
+                }
+            });
+
+            if (!preco) {
+                alert("Produto inválido! Selecione um produto da lista.");
+                return;
+            }
+
+            let subtotal = quantidade * preco;
+
+            itens.push({
+                produto: { idProduto: produtoId },
+                nomeProduto: produtoNome,
+                quantidade: parseInt(quantidade),
+                preco: parseFloat(preco),
+                subtotal: subtotal
+            });
+
+            document.getElementById("produto").value = "";
+            document.getElementById("quantidade").value = "";
+
+            renderTabela();
+        }
+
+        function removerItem(index) {
+            itens.splice(index, 1);
+            renderTabela();
+        }
+
+        function renderTabela() {
+            let tabela = document.getElementById("tabela-itens");
+            let emptyRow = document.getElementById("empty-row");
+
+            tabela.innerHTML = "";
+
+            if (itens.length === 0) {
+                tabela.innerHTML = `<tr class="empty-row" id="empty-row"><td colspan="5">Nenhum produto adicionado ao pedido.</td></tr>`;
+                document.getElementById("totalPedido").innerText = "0,00";
+                return;
+            }
+
+            let total = 0;
+
+            itens.forEach((item, index) => {
+                total += item.subtotal;
+                tabela.innerHTML += `
+                    <tr>
+                        <td>${item.nomeProduto}</td>
+                        <td>${item.quantidade}</td>
+                        <td>R$ ${item.preco.toFixed(2).replace('.', ',')}</td>
+                        <td>R$ ${item.subtotal.toFixed(2).replace('.', ',')}</td>
+                        <td><button class="btn-remove" onclick="removerItem(${index})">Remover</button></td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById("totalPedido").innerText = total.toFixed(2).replace('.', ',');
+        }
+
+        function salvarPedido() {
+            let usuarioInput = document.getElementById("usuario").value;
+
+            if (!usuarioInput) {
+                alert("Selecione um usuário antes de salvar!");
+                return;
+            }
+
+            if (itens.length === 0) {
+                alert("Adicione ao menos um produto ao pedido!");
+                return;
+            }
+
+            let usuarioId = usuarioInput.split(" - ")[0];
+
+            let pedido = {
+                usuario: { idUsuario: usuarioId },
+                itens: itens
+            };
+
+            fetch("/pedidos", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(pedido)
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert("Pedido salvo com sucesso!");
+                location.reload();
+            })
+            .catch(err => {
+                alert("Erro ao salvar o pedido. Tente novamente.");
+                console.error(err);
+            });
+        }
+    </script>
+</body>
+</html>
