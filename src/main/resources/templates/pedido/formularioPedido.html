@@ -54,123 +54,157 @@
 <span>R$ <span id="totalPedido">0.00</span></span>
 
 <button onclick="salvarPedido()">Confirmar e salvar Pedido</button>
-76% de armazenamento usado … Se você atingir o limite, não poderá criar, editar ou fazer upload de arquivos. Compartilhe 100 GB com sua família por R$ 4,50 durante 3 meses R$ 9,99.
-    <script>
-        let itens = [];
 
-        function adicionarItem() {
-            let produtoInput = document.getElementById("produto").value;
-            let quantidade = document.getElementById("quantidade").value;
+<script>
+    let itens = [];
 
-            if (!produtoInput || quantidade <= 0) {
-                alert("Preencha corretamente o produto e a quantidade!");
-                return;
-            }
+    function adicionarItem() {
+        let produtoInput = document.getElementById("produto").value;
+        let quantidade = document.getElementById("quantidade").value;
 
-            let partes = produtoInput.split(" - ");
-            let produtoId = partes[0];
-            let produtoNome = partes[1];
+        if (!produtoInput || quantidade <= 0) {
+            alert("Preencha corretamente o produto e a quantidade!");
+            return;
+        }
+        
+        let partes = produtoInput.split(" - ");
+        let produtoId = partes[0].trim();
 
-            let options = document.querySelectorAll("#listaProdutos option");
-            let preco = null;
-
-            options.forEach(opt => {
-                if (opt.value === produtoInput) {
-                    preco = opt.getAttribute("data-preco");
-                }
-            });
-
-            if (!preco) {
-                alert("Produto inválido! Selecione um produto da lista.");
-                return;
-            }
-
-            let subtotal = quantidade * preco;
-
-            itens.push({
-                produto: { idProduto: produtoId },
-                nomeProduto: produtoNome,
-                quantidade: parseInt(quantidade),
-                preco: parseFloat(preco),
-                subtotal: subtotal
-            });
-
+        // --- VALIDAÇÃO DE DUPLICIDADE ---
+        // Verifica se o ID já existe no array 'itens'
+        let jaAdicionado = itens.some(item => item.produto.idProduto === produtoId);
+        
+        if (jaAdicionado) {
+            alert("Erro: Este produto já foi adicionado ao carrinho! Altere a quantidade diretamente na tabela se necessário.");
             document.getElementById("produto").value = "";
-            document.getElementById("quantidade").value = "";
+            return; // Interrompe a execução
+        }
+        // --------------------------------
 
-            renderTabela();
+        let options = Array.from(document.querySelectorAll("#listarProdutos option"));
+        let produtoSelecionado = options.find(opt => opt.value === produtoInput)
+            || options.find(opt => opt.value.startsWith(produtoId + " - "));
+
+        if (!produtoSelecionado) {
+            alert("Produto inválido! Selecione um produto da lista.");
+            return;
         }
 
-        function removerItem(index) {
-            itens.splice(index, 1);
-            renderTabela();
+        let precoTexto = produtoSelecionado.getAttribute("data-preco");
+        let preco = precoTexto ? parseFloat(precoTexto.replace(",", ".")) : NaN;
+        let produtoNome = produtoSelecionado.value.split(" - ").slice(1).join(" - ");
+
+        if (Number.isNaN(preco)) {
+            alert("O produto selecionado está sem preço cadastrado.");
+            return;
         }
 
-        function renderTabela() {
-            let tabela = document.getElementById("tabela-itens");
-            let emptyRow = document.getElementById("empty-row");
+        let subtotal = quantidade * preco;
 
-            tabela.innerHTML = "";
+        itens.push({
+            produto: { idProduto: produtoId },
+            nomeProduto: produtoNome,
+            quantidade: parseInt(quantidade),
+            preco: parseFloat(preco),
+            subtotal: subtotal
+        });
 
-            if (itens.length === 0) {
-                tabela.innerHTML = `<tr class="empty-row" id="empty-row"><td colspan="5">Nenhum produto adicionado ao pedido.</td></tr>`;
-                document.getElementById("totalPedido").innerText = "0,00";
-                return;
-            }
+        document.getElementById("produto").value = "";
+        document.getElementById("quantidade").value = "";
 
-            let total = 0;
+        renderTabela();
+    }
 
-            itens.forEach((item, index) => {
-                total += item.subtotal;
-                tabela.innerHTML += `
-                    <tr>
-                        <td>${item.nomeProduto}</td>
-                        <td>${item.quantidade}</td>
-                        <td>R$ ${item.preco.toFixed(2).replace('.', ',')}</td>
-                        <td>R$ ${item.subtotal.toFixed(2).replace('.', ',')}</td>
-                        <td><button class="btn-remove" onclick="removerItem(${index})">Remover</button></td>
-                    </tr>
-                `;
-            });
+    function removerItem(index) {
+        itens.splice(index, 1);
+        renderTabela();
+    }
 
-            document.getElementById("totalPedido").innerText = total.toFixed(2).replace('.', ',');
+    function alterarQuantidade(index, novaQuantidade) {
+        if (novaQuantidade <= 0) {
+            alert("Quantidade inválida!");
+            return;
         }
 
-        function salvarPedido() {
-            let usuarioInput = document.getElementById("usuario").value;
+        let item = itens[index];
+        item.quantidade = parseInt(novaQuantidade);
+        item.subtotal = item.quantidade * item.preco;
 
-            if (!usuarioInput) {
-                alert("Selecione um usuário antes de salvar!");
-                return;
-            }
+        renderTabela();
+    }
 
-            if (itens.length === 0) {
-                alert("Adicione ao menos um produto ao pedido!");
-                return;
-            }
+    function renderTabela() {
+        let tabela = document.getElementById("table-itens");
+        tabela.innerHTML = "";
 
-            let usuarioId = usuarioInput.split(" - ")[0];
-
-            let pedido = {
-                usuario: { idUsuario: usuarioId },
-                itens: itens
-            };
-
-            fetch("/pedidos", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(pedido)
-            })
-            .then(res => res.json())
-            .then(data => {
-                alert("Pedido salvo com sucesso!");
-                location.reload();
-            })
-            .catch(err => {
-                alert("Erro ao salvar o pedido. Tente novamente.");
-                console.error(err);
-            });
+        if (itens.length === 0) {
+            tabela.innerHTML = `<tr class="empty-row" id="empty-row"><td colspan="5">Nenhum produto adicionado ao pedido.</td></tr>`;
+            document.getElementById("totalPedido").innerText = "0,00";
+            return;
         }
-    </script>
+
+        let total = 0;
+
+        itens.forEach((item, index) => {
+            total += item.subtotal;
+
+            tabela.innerHTML += `
+                <tr>
+                    <td>${item.nomeProduto}</td>
+                    <td>
+                        <input type="number" min="1" value="${item.quantidade}"
+                               onchange="alterarQuantidade(${index}, this.value)"
+                               style="width:60px;">
+                    </td>
+                    <td>R$ ${item.preco.toFixed(2).replace('.', ',')}</td>
+                    <td>R$ ${item.subtotal.toFixed(2).replace('.', ',')}</td>
+                    <td>
+                        <button class="btn-remove" onclick="removerItem(${index})">
+                            Remover
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+
+        document.getElementById("totalPedido").innerText = total.toFixed(2).replace('.', ',');
+    }
+
+    function salvarPedido() {
+        let usuarioInput = document.getElementById("usuario").value;
+
+        if (!usuarioInput) {
+            alert("Selecione um usuário antes de salvar!");
+            return;
+        }
+
+        if (itens.length === 0) {
+            alert("Adicione ao menos um produto ao pedido!");
+            return;
+        }
+
+        let usuarioId = usuarioInput.split(" - ")[0].trim();
+
+        let pedido = {
+            usuario: { idUsuario: usuarioId },
+            itens: itens
+        };
+
+        fetch("/pedidos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(pedido)
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert("Pedido salvo com sucesso!");
+            location.reload();
+        })
+        .catch(err => {
+            alert("Erro ao salvar o pedido. Tente novamente.");
+            console.error(err);
+        });
+    }
+</script>
 </body>
 </html>

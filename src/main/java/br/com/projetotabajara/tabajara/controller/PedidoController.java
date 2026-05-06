@@ -1,6 +1,7 @@
 package br.com.projetotabajara.tabajara.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,15 +35,19 @@ public class PedidoController {
     //endpoint para salvar o pedido (json usado pelo fatch)
     @PostMapping
     @ResponseBody
-    public Pedido salvarPedido(@RequestBody Pedido pedido){
-        return pedidoService.salvarPedido(pedido);
+    public Map<String, Object> salvarPedido(@RequestBody Pedido pedido){
+        Pedido pedidoSalvo = pedidoService.salvarPedido(pedido);
+        return Map.of(
+            "idPedido", pedidoSalvo.getIdPedido(),
+            "mensagem", "Pedido salvo com sucesso"
+        );
     }
 
     @GetMapping("/criar")
     public String criarForm(Model model){
         model.addAttribute("pedido", new Pedido());
 
-        List<Usuario> usuarios = (List<Usuario>) usuarioService.findAll();
+        List<Usuario> usuarios = usuarioService.listarTodos();
         model.addAttribute("usuarios", usuarios);
 
         List<Produto> produtos = produtoService.findAll();
