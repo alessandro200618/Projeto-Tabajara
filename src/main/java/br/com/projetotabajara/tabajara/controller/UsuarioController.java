@@ -22,14 +22,14 @@ public class UsuarioController {
     public String listar(Model model) {
         List<Usuario> usuarios = usuarioService.listarTodos();
         model.addAttribute("usuarios", usuarios);
-        return "usuario/listarUsuario";
+        return "Usuario/listarUsuario";
     }
 
     // FORMULÁRIO DE CRIAÇÃO
     @GetMapping("/criar")
     public String criarForm(Model model){
         model.addAttribute("usuario", new Usuario());
-        return "usuario/formularioUsuario";
+        return "Usuario/formularioUsuario";
     }
 
     // SALVAR USUÁRIO

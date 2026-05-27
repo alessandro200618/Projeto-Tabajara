@@ -1,60 +1,401 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Novo Pedido - Organizacoes Tabajara</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 215, 0, 0.2);
+            --input-bg: rgba(15, 23, 42, 0.78);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            color: #ffffff;
+            background: linear-gradient(-45deg, #000000, #1a1a1a, #2d2d2d, #000000, #1a1a1a, #FFD700);
+            background-size: 600% 600%;
+            animation: gradientShift 15s ease infinite;
+            overflow-x: hidden;
+            padding-top: 92px;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(2px 2px at 20px 30px, #ffffff, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.75), transparent),
+                radial-gradient(1px 1px at 100px 40px, rgba(255,255,255,0.7), transparent);
+            background-repeat: repeat;
+            background-size: 220px 120px;
+            opacity: 0.08;
+            animation: float 20s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-20px) rotate(360deg); }
+        }
+
+        .navbar {
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.45rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.78) !important;
+            font-weight: 600;
+        }
+
+        .nav-link:hover { color: #FFD700 !important; }
+
+        .page-shell {
+            position: relative;
+            z-index: 1;
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 32px 20px 72px;
+        }
+
+        .page-header,
+        .panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(28px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.34);
+            overflow: hidden;
+        }
+
+        .page-header {
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .page-header::before,
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--primary-gradient);
+        }
+
+        .page-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: #FFD700;
+        }
+
+        .panel {
+            padding: 2rem;
+            position: relative;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: #ffffff;
+        }
+
+        .section-title i {
+            color: #FFD700;
+            font-size: 1.35rem;
+        }
+
+        label {
+            color: rgba(255,255,255,0.82);
+            font-weight: 700;
+            margin-bottom: 0.45rem;
+        }
+
+        .form-control {
+            background: var(--input-bg);
+            border: 1px solid rgba(255,255,255,0.18);
+            color: #ffffff;
+            border-radius: 14px;
+            padding: 13px 15px;
+        }
+
+        .form-control:focus {
+            background: rgba(15, 23, 42, 0.92);
+            border-color: rgba(255, 215, 0, 0.68);
+            box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.18);
+            color: #ffffff;
+        }
+
+        .form-control::placeholder { color: rgba(255,255,255,0.48); }
+
+        .btn-primary-action {
+            background: var(--primary-gradient);
+            border: none;
+            color: #111827;
+            border-radius: 16px;
+            padding: 13px 20px;
+            font-weight: 800;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary-action:hover {
+            color: #111827;
+            transform: translateY(-1px);
+            box-shadow: 0 16px 34px rgba(255, 215, 0, 0.25);
+        }
+
+        .btn-secondary-action,
+        .btn-remove {
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #ffffff;
+            background: rgba(255,255,255,0.1);
+            border-radius: 14px;
+            font-weight: 700;
+            padding: 11px 18px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-secondary-action:hover {
+            color: #ffffff;
+            background: rgba(255,255,255,0.18);
+        }
+
+        .btn-remove {
+            border-color: rgba(239, 68, 68, 0.36);
+            color: #fecaca;
+            background: rgba(239, 68, 68, 0.18);
+            padding: 8px 12px;
+        }
+
+        .table-wrap {
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 20px;
+            overflow: hidden;
+            background: rgba(255,255,255,0.06);
+        }
+
+        .table {
+            margin: 0;
+            min-width: 760px;
+        }
+
+        .table thead th {
+            background: rgba(15, 15, 35, 0.94);
+            color: #e5e7eb;
+            border: none;
+            padding: 16px;
+            font-size: 0.88rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .table tbody td {
+            color: #111827;
+            background: rgba(255,255,255,0.92);
+            border-color: rgba(15,23,42,0.08);
+            padding: 16px;
+            vertical-align: middle;
+        }
+
+        .summary-card {
+            background: rgba(255, 215, 0, 0.14);
+            border: 1px solid rgba(255, 215, 0, 0.24);
+            border-radius: 22px;
+            padding: 1.4rem;
+            min-height: 100%;
+        }
+
+        .summary-label {
+            color: rgba(255,255,255,0.75);
+            font-weight: 700;
+            margin-bottom: 0.35rem;
+        }
+
+        .summary-value {
+            font-size: clamp(2rem, 4vw, 2.6rem);
+            font-weight: 800;
+            color: #FFD700;
+        }
+
+        @media (max-width: 768px) {
+            body { padding-top: 78px; }
+            .panel,
+            .page-header { padding: 1.35rem; border-radius: 22px; }
+        }
+    </style>
 </head>
 <body>
-   <datalist id="listarUsuarios">
-    <option th:each="u : ${usuarios}" 
-            th:value="${u.idUsuario + ' - ' + u.nomeUsuario}"> 
-    </option>
-   </datalist>
 
-   <datalist id="listarProdutos">
-    <option th:each="p : ${produtos}" 
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/home}">
+            <i class="bi bi-receipt me-2"></i> Organizacoes Tabajara
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#pedidoNav" aria-controls="pedidoNav" aria-expanded="false" aria-label="Abrir navegacao">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="pedidoNav">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" th:href="@{/home}">Painel</a>
+                <a class="nav-link" th:href="@{/produtos/listar}">Produtos</a>
+                <a class="nav-link" th:href="@{/fornecedores/listar}">Fornecedores</a>
+                <a class="nav-link" th:href="@{/relatorios/pedidos}">Relatorios</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<datalist id="listarUsuarios">
+    <option th:each="u : ${usuarios}" th:value="${u.idUsuario + ' - ' + u.nomeUsuario}"></option>
+</datalist>
+
+<datalist id="listarProdutos">
+    <option th:each="p : ${produtos}"
             th:value="${p.idProduto + ' - ' + p.descricaoProduto}"
             th:attr="data-preco=${p.valorProduto}">
     </option>
-   </datalist>
+</datalist>
 
-   <p> I. Identificação do Usuário</p>
-   <label for="usuario">Usuário:</label>
-   <input list="listarUsuarios" id="usuario" type="text"
-   placeholder="Digite o nome ou o codigo do usuário">
+<main class="page-shell">
+    <section class="page-header">
+        <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
+            <div>
+                <h1 class="page-title mb-2">Novo Pedido</h1>
+                <p class="mb-0" style="color: rgba(255,255,255,0.76);">Selecione o usuario, adicione produtos e finalize o pedido.</p>
+            </div>
+            <a th:href="@{/home}" class="btn-secondary-action">
+                <i class="bi bi-arrow-left"></i>
+                Voltar ao painel
+            </a>
+        </div>
+    </section>
 
-   <p>II. Adicionar produto ao pedido</p>
-   <label for="produto">Produto:</label>
-   <input list="listarProdutos" id="produto" type="text"
-   placeholder="Digite o nome ou o codigo do produto">
+    <section class="panel">
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="section-title">
+                    <i class="bi bi-person-circle"></i>
+                    Identificacao do usuario
+                </div>
+                <div class="mb-4">
+                    <label for="usuario">Usuario</label>
+                    <input list="listarUsuarios" id="usuario" class="form-control" type="text" placeholder="Digite o nome ou codigo do usuario">
+                </div>
 
-   <label for="quantidade">Quantidade:</label>
-   <input type="number" id="quantidade" placeholder="0" min="1">
-   <button type="button" onclick="adicionarItem()">
-    <span>+</span>Adicionar
-   </button>
-   <table>
-        <thead>
-            <tr>
-                <th>Produto</th>
-                <th>Quantidade</th>
-                <th>Preço unitário</th>
-                <th>SubTotal</th>
-                <th>Ação</th>
-            </tr>
-        </thead>
-        <tbody id="table-itens">
-            <tr id="empty-row">
-                <td colspan="5">Nenhum item adicionado</td>
-            </tr>
-    </tbody>
-</table>
-<span>Total do Pedido</span>
-<span>R$ <span id="totalPedido">0.00</span></span>
+                <div class="section-title">
+                    <i class="bi bi-box-seam"></i>
+                    Adicionar produto
+                </div>
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-7">
+                        <label for="produto">Produto</label>
+                        <input list="listarProdutos" id="produto" class="form-control" type="text" placeholder="Digite o nome ou codigo do produto">
+                    </div>
+                    <div class="col-md-3">
+                        <label for="quantidade">Quantidade</label>
+                        <input type="number" id="quantidade" class="form-control" placeholder="0" min="1">
+                    </div>
+                    <div class="col-md-2 d-grid">
+                        <button type="button" class="btn btn-primary-action" onclick="adicionarItem()" title="Adicionar produto">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-<button onclick="salvarPedido()">Confirmar e salvar Pedido</button>
+            <div class="col-lg-5">
+                <div class="summary-card">
+                    <div class="summary-label">Total do pedido</div>
+                    <div class="summary-value">R$ <span id="totalPedido">0,00</span></div>
+                    <p class="mb-0" style="color: rgba(255,255,255,0.72);">O total e atualizado automaticamente conforme os itens sao adicionados.</p>
+                </div>
+            </div>
+        </div>
 
+        <div class="mt-4">
+            <div class="section-title">
+                <i class="bi bi-cart-check"></i>
+                Itens do pedido
+            </div>
+            <div class="table-responsive table-wrap">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th>Quantidade</th>
+                            <th>Preco unitario</th>
+                            <th>Subtotal</th>
+                            <th>Acao</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-itens">
+                        <tr id="empty-row">
+                            <td colspan="5" class="text-center">Nenhum item adicionado.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="d-flex flex-column flex-md-row gap-3 justify-content-end mt-4">
+            <a th:href="@{/home}" class="btn-secondary-action">
+                <i class="bi bi-x-circle"></i>
+                Cancelar
+            </a>
+            <button type="button" class="btn btn-primary-action" onclick="salvarPedido()">
+                <i class="bi bi-check-circle"></i>
+                Confirmar e salvar pedido
+            </button>
+        </div>
+    </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     let itens = [];
 
@@ -66,27 +407,24 @@
             alert("Preencha corretamente o produto e a quantidade!");
             return;
         }
-        
+
         let partes = produtoInput.split(" - ");
         let produtoId = partes[0].trim();
 
-        // --- VALIDAÇÃO DE DUPLICIDADE ---
-        // Verifica se o ID já existe no array 'itens'
         let jaAdicionado = itens.some(item => item.produto.idProduto === produtoId);
-        
+
         if (jaAdicionado) {
-            alert("Erro: Este produto já foi adicionado ao carrinho! Altere a quantidade diretamente na tabela se necessário.");
+            alert("Este produto ja foi adicionado ao pedido.");
             document.getElementById("produto").value = "";
-            return; // Interrompe a execução
+            return;
         }
-        // --------------------------------
 
         let options = Array.from(document.querySelectorAll("#listarProdutos option"));
         let produtoSelecionado = options.find(opt => opt.value === produtoInput)
             || options.find(opt => opt.value.startsWith(produtoId + " - "));
 
         if (!produtoSelecionado) {
-            alert("Produto inválido! Selecione um produto da lista.");
+            alert("Produto invalido. Selecione um produto da lista.");
             return;
         }
 
@@ -95,7 +433,7 @@
         let produtoNome = produtoSelecionado.value.split(" - ").slice(1).join(" - ");
 
         if (Number.isNaN(preco)) {
-            alert("O produto selecionado está sem preço cadastrado.");
+            alert("O produto selecionado esta sem preco cadastrado.");
             return;
         }
 
@@ -122,7 +460,7 @@
 
     function alterarQuantidade(index, novaQuantidade) {
         if (novaQuantidade <= 0) {
-            alert("Quantidade inválida!");
+            alert("Quantidade invalida!");
             return;
         }
 
@@ -138,7 +476,7 @@
         tabela.innerHTML = "";
 
         if (itens.length === 0) {
-            tabela.innerHTML = `<tr class="empty-row" id="empty-row"><td colspan="5">Nenhum produto adicionado ao pedido.</td></tr>`;
+            tabela.innerHTML = `<tr id="empty-row"><td colspan="5" class="text-center">Nenhum item adicionado.</td></tr>`;
             document.getElementById("totalPedido").innerText = "0,00";
             return;
         }
@@ -150,16 +488,17 @@
 
             tabela.innerHTML += `
                 <tr>
-                    <td>${item.nomeProduto}</td>
+                    <td><strong>${item.nomeProduto}</strong></td>
                     <td>
                         <input type="number" min="1" value="${item.quantidade}"
                                onchange="alterarQuantidade(${index}, this.value)"
-                               style="width:60px;">
+                               class="form-control form-control-sm" style="width:90px;">
                     </td>
                     <td>R$ ${item.preco.toFixed(2).replace('.', ',')}</td>
-                    <td>R$ ${item.subtotal.toFixed(2).replace('.', ',')}</td>
+                    <td><strong>R$ ${item.subtotal.toFixed(2).replace('.', ',')}</strong></td>
                     <td>
-                        <button class="btn-remove" onclick="removerItem(${index})">
+                        <button type="button" class="btn-remove" onclick="removerItem(${index})">
+                            <i class="bi bi-trash"></i>
                             Remover
                         </button>
                     </td>
@@ -174,7 +513,7 @@
         let usuarioInput = document.getElementById("usuario").value;
 
         if (!usuarioInput) {
-            alert("Selecione um usuário antes de salvar!");
+            alert("Selecione um usuario antes de salvar!");
             return;
         }
 
@@ -195,13 +534,19 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(pedido)
         })
-        .then(res => res.json())
+        .then(res => res.json().then(data => ({ ok: res.ok, data })))
+        .then(({ ok, data }) => {
+            if (!ok) {
+                throw new Error(data.mensagem || "Erro ao salvar o pedido.");
+            }
+            return data;
+        })
         .then(data => {
-            alert("Pedido salvo com sucesso!");
+            alert(data.mensagem || "Pedido salvo com sucesso!");
             location.reload();
         })
         .catch(err => {
-            alert("Erro ao salvar o pedido. Tente novamente.");
+            alert(err.message || "Erro ao salvar o pedido. Tente novamente.");
             console.error(err);
         });
     }

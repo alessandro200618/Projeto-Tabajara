@@ -2,9 +2,7 @@ package br.com.projetotabajara.tabajara.entity;
 
 import java.time.LocalDate;
 import java.util.List;
-import org.hibernate.annotations.ManyToAny;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -43,7 +41,9 @@ public class Pedido {
         double total = 0.0;
         if (itens != null) {
             for (ItemDoPedido item : itens) {
-                total += item.getSubtotal();
+                if (item.getSubtotal() != null) {
+                    total += item.getSubtotal();
+                }
             }
         }
         return total;

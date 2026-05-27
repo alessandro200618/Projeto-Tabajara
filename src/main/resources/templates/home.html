@@ -1,307 +1,514 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Santos FC - Sistema de Gestão</title>
-    
-    <!-- Bootstrap 5.3.2 -->
+    <title>Painel - Organizacoes Tabajara</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --primary-gradient: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            --secondary-gradient: linear-gradient(135deg, #FFFFFF 0%, #F0F0F0 100%);
-            --success-gradient: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-            --warning-gradient: linear-gradient(135deg, #FFB81C 0%, #FFA500 100%);
-            --dark-gradient: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
-            --glass-bg: rgba(255, 215, 0, 0.1);
-            --glass-border: rgba(255, 215, 0, 0.2);
+            --gold: #FFD700;
+            --amber: #FFA500;
+            --surface: rgba(255, 255, 255, 0.1);
+            --surface-strong: rgba(255, 255, 255, 0.14);
+            --border: rgba(255, 215, 0, 0.2);
+            --text: #ffffff;
+            --muted: rgba(255, 255, 255, 0.72);
+            --dark: #08090d;
+            --gradient: linear-gradient(135deg, var(--gold) 0%, var(--amber) 100%);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             min-height: 100vh;
             font-family: 'Inter', sans-serif;
-            color: #ffffff;
+            color: var(--text);
+            background:
+                linear-gradient(180deg, rgba(255, 215, 0, 0.1) 0%, transparent 34%),
+                linear-gradient(135deg, #050506 0%, #12151d 48%, #090a0d 100%);
             overflow-x: hidden;
-            background: linear-gradient(-45deg, #000000, #1a1a1a, #2d2d2d, #000000, #1a1a1a, #FFD700);
-            background-size: 600% 600%;
-            animation: gradientShift 15s ease infinite;
+            padding-top: 78px;
             position: relative;
         }
 
         body::before {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                radial-gradient(2px 2px at 20px 30px, #eee, transparent),
-                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.8), transparent),
-                radial-gradient(1px 1px at 90px 40px, #fff, transparent),
-                radial-gradient(1px 1px at 130px 80px, rgba(255,255,255,0.6), transparent);
-            background-repeat: repeat;
-            background-size: 200px 100px;
-            animation: float 20s linear infinite;
-            opacity: 0.1;
-            z-index: 0;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            25% { background-position: 100% 50%; }
-            50% { background-position: 100% 100%; }
-            75% { background-position: 0% 100%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0px) rotate(0deg); }
-            100% { transform: translateY(-20px) rotate(360deg); }
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,0.9), transparent 82%);
+            pointer-events: none;
         }
 
         .navbar {
-            background: rgba(15, 15, 35, 0.95);
+            background: rgba(8, 9, 13, 0.92);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--glass-border);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-            letter-spacing: 1px;
-            background: var(--primary-gradient);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 100px 0 60px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 4rem);
+            color: var(--text) !important;
             font-weight: 800;
-            background: linear-gradient(135deg, #FFFFFF 0%, #FFD700 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1rem;
-            text-shadow: 0 0 30px rgba(255,215,0,0.5);
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            opacity: 0.9;
-            font-weight: 300;
-        }
-
-        .dashboard {
-            padding: 0 20px 80px;
-            position: relative;
-            z-index: 1;
-            max-width: 900px;
-            margin: 0 auto;
-        }
-
-        .card {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 2.5rem;
-            height: 100%;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--primary-gradient);
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-            border-color: rgba(255,255,255,0.3);
-        }
-
-        .card:hover::before {
-            transform: scaleX(1);
-        }
-
-        .card h3 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
-        .card h3 i {
-            font-size: 2.5rem;
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            display: flex;
+        .brand-mark {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255, 215, 0, 0.15);
-            backdrop-filter: blur(10px);
-            color: #FFD700;
+            background: var(--gradient);
+            color: #111827;
+            box-shadow: 0 12px 30px rgba(255, 165, 0, 0.24);
         }
 
-        .card p {
-            color: rgba(255, 255, 255, 0.85);
-            line-height: 1.7;
-            margin-bottom: 2rem;
-            font-size: 1.1rem;
-        }
-
-        .btn-custom {
-            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);
-            border: 2px solid var(--glass-border);
-            border-radius: 16px;
-            padding: 16px 32px;
-            font-size: 1.1rem;
+        .nav-link {
+            color: rgba(255,255,255,0.72) !important;
             font-weight: 600;
-            letter-spacing: 0.5px;
-            backdrop-filter: blur(20px);
-            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover,
+        .nav-link:focus {
+            color: var(--gold) !important;
+        }
+
+        .dashboard-shell {
+            position: relative;
+            z-index: 1;
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 38px 20px 48px;
+        }
+
+        .dashboard-header {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 24px;
+            align-items: end;
+            margin-bottom: 28px;
+        }
+
+        .eyebrow {
+            color: var(--gold);
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-title {
+            max-width: 760px;
+            font-size: clamp(2.1rem, 5vw, 3.5rem);
+            line-height: 1.08;
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+
+        .dashboard-subtitle {
+            max-width: 660px;
+            color: var(--muted);
+            font-size: 1.05rem;
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .btn-dashboard {
+            min-height: 46px;
+            border-radius: 14px;
+            padding: 12px 18px;
+            font-weight: 800;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .btn-dashboard:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary-panel {
+            background: var(--gradient);
+            color: #111827;
+            border: none;
+            box-shadow: 0 16px 36px rgba(255, 165, 0, 0.22);
+        }
+
+        .btn-primary-panel:hover {
+            color: #111827;
+        }
+
+        .btn-ghost-panel {
+            background: rgba(255,255,255,0.08);
+            color: var(--text);
+            border: 1px solid rgba(255,255,255,0.16);
+        }
+
+        .btn-ghost-panel:hover {
+            color: var(--text);
+            background: rgba(255,255,255,0.14);
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin: 0 0 16px;
+        }
+
+        .section-heading h2 {
+            font-size: 1rem;
+            font-weight: 800;
+            margin: 0;
+            color: rgba(255,255,255,0.88);
+        }
+
+        .section-heading span {
+            color: rgba(255,255,255,0.54);
+            font-size: 0.92rem;
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 16px;
+        }
+
+        .module-card {
+            min-height: 218px;
+            grid-column: span 4;
+            background: var(--surface);
+            color: var(--text);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 22px;
+            padding: 22px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(22px);
+            box-shadow: 0 22px 60px rgba(0,0,0,0.28);
+            transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease;
         }
 
-        .btn-custom:hover {
-            background: var(--primary-gradient);
-            border-color: transparent;
-            transform: translateY(-2px);
-            box-shadow: 0 15px 35px rgba(255, 215, 0, 0.4);
-            color: #ffffff !important;
+        .module-card::before {
+            content: '';
+            position: absolute;
+            inset: 0 0 auto 0;
+            height: 4px;
+            background: var(--card-accent, var(--gradient));
         }
 
-        .card-produtos h3 i { background: rgba(255, 215, 0, 0.3); color: #FFD700; }
-        .card-fornecedores h3 i { background: rgba(255, 215, 0, 0.3); color: #FFD700; }
-        .card-usuarios h3 i { background: rgba(255, 215, 0, 0.3); color: #FFD700; }
-
-        .footer { text-align: center; padding: 3rem 20px; opacity: 0.8; font-size: 0.95rem; position: relative; z-index: 1; }
-
-        @media (max-width: 768px) {
-            .hero { padding: 80px 0 40px; }
-            .dashboard { padding: 0 15px 60px; }
-            .card { margin-bottom: 1.5rem; padding: 2rem; }
+        .module-card:hover {
+            color: var(--text);
+            background: var(--surface-strong);
+            border-color: rgba(255,255,255,0.24);
+            transform: translateY(-5px);
         }
 
-        html { scroll-behavior: smooth; }
+        .module-card.primary {
+            grid-column: span 6;
+            min-height: 236px;
+            background:
+                linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255,255,255,0.08)),
+                var(--surface);
+            border-color: var(--border);
+        }
 
-        .card { animation: fadeInUp 0.6s ease forwards; opacity: 0; transform: translateY(30px); }
-        .card:nth-child(1) { animation-delay: 0.1s; }
-        .card:nth-child(2) { animation-delay: 0.3s; }
-        .card:nth-child(3) { animation-delay: 0.5s; }
+        .module-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
 
-        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        .module-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--icon-color, var(--gold));
+            background: var(--icon-bg, rgba(255, 215, 0, 0.14));
+            border: 1px solid var(--icon-border, rgba(255, 215, 0, 0.22));
+            font-size: 1.65rem;
+            flex: 0 0 auto;
+        }
+
+        .module-kicker {
+            color: rgba(255,255,255,0.54);
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .module-card h3 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .module-card p {
+            color: var(--muted);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .module-link {
+            margin-top: 22px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--gold);
+            font-weight: 800;
+        }
+
+        .module-card.produtos {
+            --card-accent: linear-gradient(135deg, #FFD700, #FFA500);
+            --icon-color: #FFD700;
+            --icon-bg: rgba(255, 215, 0, 0.14);
+            --icon-border: rgba(255, 215, 0, 0.24);
+        }
+
+        .module-card.fornecedores {
+            --card-accent: linear-gradient(135deg, #38bdf8, #2563eb);
+            --icon-color: #7dd3fc;
+            --icon-bg: rgba(56, 189, 248, 0.13);
+            --icon-border: rgba(56, 189, 248, 0.22);
+        }
+
+        .module-card.usuarios {
+            --card-accent: linear-gradient(135deg, #a78bfa, #6366f1);
+            --icon-color: #c4b5fd;
+            --icon-bg: rgba(167, 139, 250, 0.14);
+            --icon-border: rgba(167, 139, 250, 0.22);
+        }
+
+        .module-card.pedidos {
+            --card-accent: linear-gradient(135deg, #34d399, #059669);
+            --icon-color: #6ee7b7;
+            --icon-bg: rgba(52, 211, 153, 0.13);
+            --icon-border: rgba(52, 211, 153, 0.22);
+        }
+
+        .module-card.relatorios {
+            --card-accent: linear-gradient(135deg, #fb7185, #ef4444);
+            --icon-color: #fda4af;
+            --icon-bg: rgba(251, 113, 133, 0.13);
+            --icon-border: rgba(251, 113, 133, 0.24);
+        }
+
+        .footer {
+            position: relative;
+            z-index: 1;
+            color: rgba(255,255,255,0.5);
+            text-align: center;
+            padding: 0 20px 30px;
+            font-size: 0.92rem;
+        }
+
+        @media (max-width: 991px) {
+            body {
+                padding-top: 74px;
+            }
+
+            .navbar-collapse {
+                padding-top: 12px;
+            }
+
+            .dashboard-header {
+                grid-template-columns: 1fr;
+                align-items: start;
+            }
+
+            .header-actions {
+                justify-content: flex-start;
+            }
+
+            .module-card,
+            .module-card.primary {
+                grid-column: span 6;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .dashboard-shell {
+                padding: 28px 14px 42px;
+            }
+
+            .dashboard-title {
+                font-size: 2.15rem;
+            }
+
+            .header-actions {
+                width: 100%;
+            }
+
+            .btn-dashboard {
+                width: 100%;
+            }
+
+            .module-card,
+            .module-card.primary {
+                grid-column: span 12;
+                min-height: 202px;
+                border-radius: 18px;
+                padding: 19px;
+            }
+
+            .section-heading {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">
-            <i class="bi bi-soccer me-2"></i> Santos FC
+    <div class="container-fluid px-3 px-lg-4">
+        <a class="navbar-brand" th:href="@{/home}">
+            <span class="brand-mark"><i class="bi bi-grid-1x2-fill"></i></span>
+            <span>Organizacoes Tabajara</span>
         </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHome" aria-controls="navbarHome" aria-expanded="false" aria-label="Abrir navegacao">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarHome">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" th:href="@{/produtos/listar}">Produtos</a>
+                <a class="nav-link" th:href="@{/fornecedores/listar}">Fornecedores</a>
+                <a class="nav-link" th:href="@{/usuarios/listar}">Usuarios</a>
+                <a class="nav-link" th:href="@{/pedidos/criar}">Pedidos</a>
+                <a class="nav-link" th:href="@{/relatorios/pedidos}">Relatorios</a>
+                <a class="nav-link" th:href="@{/logout}">Sair</a>
+            </div>
+        </div>
     </div>
 </nav>
 
-<section class="hero">
-    <div class="container">
-        <h1>퉬 Bem-vindo ao Santos FC</h1>
-        <p>Sistema de Gestão • Administre com eficiência</p>
-    </div>
-</section>
-
-<div class="container dashboard">
-    <div class="row g-4 justify-content-center">
-
-        <!-- PRODUTOS -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card card-produtos">
-                <div>
-                    <h3><i class="bi bi-box-seam"></i> Produtos</h3>
-                    <p>Gerencie seu catálogo completo. Cadastre, edite e remova produtos com total controle de estoque.</p>
-                </div>
-                <a th:href="@{/produtos/listar}" class="btn btn-custom"><i class="bi bi-arrow-right"></i> Gerenciar Produtos</a>
-            </div>
+<main class="dashboard-shell">
+    <header class="dashboard-header">
+        <div>
+            <div class="eyebrow">Painel administrativo</div>
+            <h1 class="dashboard-title">Controle o sistema sem perder tempo.</h1>
+            <p class="dashboard-subtitle">Acesse rapidamente cadastros, pedidos e relatorios. A tela foi organizada para trabalho diario, com menos ruido e atalhos mais claros.</p>
         </div>
 
-        <!-- FORNECEDORES -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card card-fornecedores">
-                <div>
-                    <h3><i class="bi bi-truck"></i> Fornecedores</h3>
-                    <p>Controle total dos seus parceiros comerciais. Cadastre e gerencie contatos e histórico de compras.</p>
-                </div>
-                <a th:href="@{/fornecedores/listar}" class="btn btn-custom"><i class="bi bi-arrow-right"></i> Gerenciar Fornecedores</a>
-            </div>
+        <div class="header-actions">
+            <a th:href="@{/pedidos/criar}" class="btn-dashboard btn-primary-panel">
+                <i class="bi bi-plus-circle"></i>
+                Novo pedido
+            </a>
+            <a th:href="@{/relatorios/pedidos}" class="btn-dashboard btn-ghost-panel">
+                <i class="bi bi-file-earmark-bar-graph"></i>
+                Relatorios
+            </a>
+        </div>
+    </header>
+
+    <section aria-labelledby="modulos-title">
+        <div class="section-heading">
+            <h2 id="modulos-title">Modulos do sistema</h2>
+            <span>Escolha uma area para comecar</span>
         </div>
 
-        <!-- USUÁRIOS -->
-        <div class="col-md-6 col-lg-4">
-            <div class="card card-usuarios">
+        <div class="module-grid">
+            <a th:href="@{/pedidos/criar}" class="module-card primary pedidos">
                 <div>
-                    <h3><i class="bi bi-people"></i> Usuários</h3>
-                    <p>Gerencie todos os usuários do sistema. Cadastre, edite e remova com facilidade.</p>
+                    <div class="module-top">
+                        <div class="module-icon"><i class="bi bi-receipt"></i></div>
+                        <span class="module-kicker">Operacao</span>
+                    </div>
+                    <h3>Pedidos</h3>
+                    <p>Monte um pedido, selecione o usuario e adicione produtos com quantidade e subtotal calculados.</p>
                 </div>
-                <a th:href="@{/usuarios/listar}" class="btn btn-custom"><i class="bi bi-arrow-right"></i> Gerenciar Usuários</a>
-            </div>
-        </div>
-        
-        <div class="col-md-6 col-lg-4">
-            <div class="card card-usuarios">
+                <span class="module-link">Criar pedido <i class="bi bi-arrow-right"></i></span>
+            </a>
+
+            <a th:href="@{/produtos/listar}" class="module-card primary produtos">
                 <div>
-                    <h3><i class="bi bi-people"></i> Pedidos</h3>
-                    <p>Gerencie todos os pedidos do sistema. Cadastre, edite e remova com facilidade.</p>
+                    <div class="module-top">
+                        <div class="module-icon"><i class="bi bi-box-seam"></i></div>
+                        <span class="module-kicker">Cadastro</span>
+                    </div>
+                    <h3>Produtos</h3>
+                    <p>Consulte, cadastre e atualize produtos, marcas, unidades e fornecedores vinculados.</p>
                 </div>
-                <a th:href="@{/pedidos/criar}" class="btn btn-custom"><i class="bi bi-arrow-right"></i> Gerenciar Pedidos</a>
-            </div>
+                <span class="module-link">Gerenciar produtos <i class="bi bi-arrow-right"></i></span>
+            </a>
+
+            <a th:href="@{/fornecedores/listar}" class="module-card fornecedores">
+                <div>
+                    <div class="module-top">
+                        <div class="module-icon"><i class="bi bi-truck"></i></div>
+                        <span class="module-kicker">Parceiros</span>
+                    </div>
+                    <h3>Fornecedores</h3>
+                    <p>Mantenha contatos, CNPJ, endereco e cidade dos fornecedores sempre atualizados.</p>
+                </div>
+                <span class="module-link">Abrir fornecedores <i class="bi bi-arrow-right"></i></span>
+            </a>
+
+            <a th:href="@{/usuarios/listar}" class="module-card usuarios">
+                <div>
+                    <div class="module-top">
+                        <div class="module-icon"><i class="bi bi-people"></i></div>
+                        <span class="module-kicker">Acesso</span>
+                    </div>
+                    <h3>Usuarios</h3>
+                    <p>Veja os usuarios cadastrados e mantenha o controle de quem utiliza o sistema.</p>
+                </div>
+                <span class="module-link">Ver usuarios <i class="bi bi-arrow-right"></i></span>
+            </a>
+
+            <a th:href="@{/relatorios/pedidos}" class="module-card relatorios">
+                <div>
+                    <div class="module-top">
+                        <div class="module-icon"><i class="bi bi-file-earmark-pdf"></i></div>
+                        <span class="module-kicker">Analise</span>
+                    </div>
+                    <h3>Relatorios</h3>
+                    <p>Visualize os pedidos cadastrados e gere relatorios em PDF para acompanhamento.</p>
+                </div>
+                <span class="module-link">Abrir relatorios <i class="bi bi-arrow-right"></i></span>
+            </a>
         </div>
-    </div>
-</div>
+    </section>
+</main>
 
 <footer class="footer">
-    <div class="container">
-        <p>&copy; 2026 Santos Futebol Clube. Todos os direitos reservados.</p>
-    </div>
+    <p class="mb-0">&copy; 2026 Organizacoes Tabajara. Sistema de Gestao.</p>
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-window.addEventListener('scroll', () => {
-    const navbar = document.querySelector('.navbar');
-    navbar.style.background = window.scrollY > 50 ? 'rgba(15,15,35,0.98)' : 'rgba(15,15,35,0.95)';
-});
-</script>
-
 </body>
 </html>

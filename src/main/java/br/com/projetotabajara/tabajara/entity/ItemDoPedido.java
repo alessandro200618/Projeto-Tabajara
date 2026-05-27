@@ -1,8 +1,5 @@
 package br.com.projetotabajara.tabajara.entity;
 
-import org.hibernate.annotations.ManyToAny;
-
-import jakarta.annotation.Generated;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -40,6 +37,9 @@ public class ItemDoPedido {
 
     //Método para calcular subtotal
     public Double calcularSubtotal() {
+        if (quantidade == null || preco == null) {
+            return 0.0;
+        }
         return quantidade * preco;
     }
     //Método para calcular subtotal

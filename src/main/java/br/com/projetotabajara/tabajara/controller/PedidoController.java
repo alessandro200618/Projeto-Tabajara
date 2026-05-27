@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import br.com.projetotabajara.tabajara.service.PedidoService;
 import br.com.projetotabajara.tabajara.service.ProdutoService;
 import br.com.projetotabajara.tabajara.service.UsuarioService;
 
+
 @Controller
 @RequestMapping("/pedidos")
 public class PedidoController {
@@ -31,29 +33,37 @@ public class PedidoController {
 
     @Autowired
     private ProdutoService produtoService;
-    
-    //endpoint para salvar o pedido (json usado pelo fatch)
+
+
+    // Endpoint para salvar um pedido (JSON usado pelo fetch)
+
     @PostMapping
     @ResponseBody
-    public Map<String, Object> salvarPedido(@RequestBody Pedido pedido){
-        Pedido pedidoSalvo = pedidoService.salvarPedido(pedido);
-        return Map.of(
-            "idPedido", pedidoSalvo.getIdPedido(),
-            "mensagem", "Pedido salvo com sucesso"
-        );
+    public ResponseEntity<Map<String, Object>> salvarPedido(@RequestBody Pedido pedido) {
+        try {
+            Pedido pedidoSalvo = pedidoService.salvarPedido(pedido);
+
+            return ResponseEntity.ok(Map.of(
+                    "idPedido", pedidoSalvo.getIdPedido(),
+                    "mensagem", "Pedido salvo com sucesso"
+            ));
+        } catch (RuntimeException ex) {
+            return ResponseEntity.badRequest().body(Map.of(
+                    "mensagem", ex.getMessage()
+            ));
+        }
     }
 
     @GetMapping("/criar")
-    public String criarForm(Model model){
+    public String criarForm(Model model) {
         model.addAttribute("pedido", new Pedido());
-
-        List<Usuario> usuarios = usuarioService.listarTodos();
+        List<Usuario> usuarios = usuarioService.findAll();
         model.addAttribute("usuarios", usuarios);
-
         List<Produto> produtos = produtoService.findAll();
-        model.addAttribute("produtos", produtos); 
+        model.addAttribute("produtos", produtos);
         return "pedido/formularioPedido";
     }
+    
 
-
+    
 }

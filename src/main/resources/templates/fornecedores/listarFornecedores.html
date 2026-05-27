@@ -1,158 +1,303 @@
 <!DOCTYPE html>
-<html lang="pt" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Listagem de Fornecedores - Santos FC</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fornecedores - Organizacoes Tabajara</title>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-<style>
-/* Fundo animado */
-body {
-    margin:0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: linear-gradient(-45deg,#000000,#1a1a1a,#2d2d2d,#FFD700);
-    background-size:400% 400%;
-    animation: gradient 12s ease infinite;
-    color:white;
-    min-height:100vh;
-    padding:30px;
-}
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            --glass-bg: rgba(255, 255, 255, 0.09);
+            --glass-border: rgba(255, 215, 0, 0.18);
+        }
 
-@keyframes gradient{
-0%{background-position:0% 50%;}
-50%{background-position:100% 50%;}
-100%{background-position:0% 50%;}
-}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* Títulos */
-h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #FFD700;
-}
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            color: #ffffff;
+            background: linear-gradient(-45deg, #000000, #1a1a1a, #2d2d2d, #000000, #1a1a1a, #FFD700);
+            background-size: 600% 600%;
+            animation: gradientShift 15s ease infinite;
+            overflow-x: hidden;
+            padding-top: 96px;
+        }
 
-h3 a {
-    text-decoration: none;
-    color: #10b981; /* verde */
-    font-weight: bold;
-}
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(2px 2px at 20px 30px, #ffffff, transparent),
+                radial-gradient(2px 2px at 40px 70px, rgba(255,255,255,0.75), transparent);
+            background-repeat: repeat;
+            background-size: 200px 100px;
+            opacity: 0.08;
+            animation: float 20s linear infinite;
+            pointer-events: none;
+        }
 
-h3 a:hover {
-    color: #059669;
-}
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            25% { background-position: 100% 50%; }
+            50% { background-position: 100% 100%; }
+            75% { background-position: 0% 100%; }
+            100% { background-position: 0% 50%; }
+        }
 
-/* Tabela */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    background-color: rgba(0,0,0,0.7);
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.14);
-}
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-20px) rotate(360deg); }
+        }
 
-th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid rgba(255,255,255,0.12);
-    color: #f8fafc;
-}
+        .navbar {
+            background: rgba(15, 15, 35, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
 
-th {
-    background-color: rgba(15,23,42,0.95);
-    color: #a5f3fc;
-}
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.45rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-tr:hover {
-    background-color: rgba(255,255,255,0.1);
-}
+        .nav-link {
+            color: rgba(255,255,255,0.78) !important;
+            font-weight: 600;
+        }
 
-/* Botões de ação */
-a.action-btn {
-    text-decoration: none;
-    padding: 6px 12px;
-    border-radius: 5px;
-    color: white;
-    font-weight: bold;
-    transition: 0.3s;
-}
+        .nav-link:hover { color: #FFD700 !important; }
 
-a.edit-btn {
-    background-color: #2563eb; /* azul */
-}
+        .page-shell {
+            position: relative;
+            z-index: 1;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 32px 20px 72px;
+        }
 
-a.edit-btn:hover {
-    background-color: #1d4ed8;
-}
+        .page-header,
+        .table-container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(28px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.34);
+            overflow: hidden;
+            position: relative;
+        }
 
-a.delete-btn {
-    background-color: #dc2626; /* vermelho */
-}
+        .page-header {
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
 
-a.delete-btn:hover {
-    background-color: #b91c1c;
-}
+        .page-header::before,
+        .table-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--primary-gradient);
+        }
 
-/* Botão Voltar */
-a.back-btn {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #6b7280; /* cinza escuro */
-    border-radius: 8px;
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
-    transition: 0.3s;
-}
+        .page-title {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: #FFD700;
+        }
 
-a.back-btn:hover {
-    background-color: #4b5563;
-}
-</style>
+        .btn-add,
+        .btn-back,
+        .btn-action {
+            border-radius: 14px;
+            font-weight: 800;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-add {
+            background: var(--primary-gradient);
+            border: none;
+            color: #111827;
+            padding: 14px 22px;
+        }
+
+        .btn-back {
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #ffffff;
+            background: rgba(255,255,255,0.1);
+            padding: 12px 20px;
+        }
+
+        .btn-back:hover {
+            color: #ffffff;
+            background: rgba(255,255,255,0.18);
+        }
+
+        .table { margin: 0; min-width: 960px; }
+
+        .table thead th {
+            background: rgba(15, 15, 35, 0.94);
+            color: #e5e7eb;
+            border: none;
+            padding: 18px 16px;
+            font-size: 0.86rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .table tbody td {
+            color: #111827;
+            background: rgba(255,255,255,0.93);
+            border-color: rgba(15,23,42,0.08);
+            padding: 16px;
+            vertical-align: middle;
+        }
+
+        .table tbody tr:hover td {
+            background: rgba(255, 248, 220, 0.98);
+        }
+
+        .btn-action {
+            padding: 8px 13px;
+            border: 1px solid transparent;
+            font-size: 0.88rem;
+        }
+
+        .btn-edit {
+            color: #1d4ed8;
+            background: rgba(37, 99, 235, 0.12);
+            border-color: rgba(37, 99, 235, 0.24);
+        }
+
+        .btn-delete {
+            color: #b91c1c;
+            background: rgba(220, 38, 38, 0.12);
+            border-color: rgba(220, 38, 38, 0.24);
+        }
+
+        .empty-state {
+            color: rgba(255,255,255,0.75);
+            text-align: center;
+            padding: 3.5rem 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            body { padding-top: 78px; }
+            .page-header { padding: 1.35rem; border-radius: 22px; }
+        }
+    </style>
 </head>
 <body>
 
-<h1>퉬 Listagem de Fornecedores - Santos FC</h1>
+<nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/home}">
+            <i class="bi bi-truck me-2"></i> Organizacoes Tabajara
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#fornecedorListNav" aria-controls="fornecedorListNav" aria-expanded="false" aria-label="Abrir navegacao">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="fornecedorListNav">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" th:href="@{/home}">Painel</a>
+                <a class="nav-link" th:href="@{/produtos/listar}">Produtos</a>
+                <a class="nav-link" th:href="@{/pedidos/criar}">Pedidos</a>
+            </div>
+        </div>
+    </div>
+</nav>
 
-<h3><a th:href="@{/fornecedores/criar}">➕ Adicionar Novo Fornecedor</a></h3>
+<main class="page-shell">
+    <section class="page-header">
+        <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3">
+            <div>
+                <h1 class="page-title mb-2">Fornecedores</h1>
+                <p class="mb-0" style="color: rgba(255,255,255,0.76);">Consulte, cadastre e atualize os parceiros comerciais.</p>
+            </div>
+            <a th:href="@{/fornecedores/criar}" class="btn-add">
+                <i class="bi bi-plus-circle"></i>
+                Novo fornecedor
+            </a>
+        </div>
+    </section>
 
-<table>
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>CNPJ</th>
-            <th>Endereço</th>
-            <th>Telefone</th>
-            <th>Cidade</th>
-            <th colspan="2">Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="fornecedor : ${fornecedores}">
-            <td th:text="${fornecedor.idFornecedor}">ID</td>
-            <td th:text="${fornecedor.nomeFornecedor}">Nome</td>
-            <td th:text="${fornecedor.cnpjFornecedor}">CNPJ</td>
-            <td th:text="${fornecedor.enderecoFornecedor}">Endereço</td>
-            <td th:text="${fornecedor.telefoneFornecedor}">Telefone</td>
-            <td th:text="${fornecedor.cidadeFornecedor}">Cidade</td>
-            <td>
-                <a th:href="@{/fornecedores/editar/{id}(id=${fornecedor.idFornecedor})}" class="action-btn edit-btn">Editar</a>
-            </td>
-            <td>
-                <a th:href="@{/fornecedores/excluir/{id}(id=${fornecedor.idFornecedor})}" 
-                   class="action-btn delete-btn"
-                   onclick="return confirm('Tem certeza que deseja excluir este fornecedor?');">Excluir</a>
-            </td>
-        </tr>
-    </tbody>
-</table>
+    <section class="table-container">
+        <div class="table-responsive" th:if="${!fornecedores.isEmpty()}">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>CNPJ</th>
+                        <th>Endereco</th>
+                        <th>Telefone</th>
+                        <th>Cidade</th>
+                        <th style="width: 190px;">Acoes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="fornecedor : ${fornecedores}">
+                        <td><strong th:text="${fornecedor.idFornecedor}">1</strong></td>
+                        <td th:text="${fornecedor.nomeFornecedor}">Fornecedor</td>
+                        <td th:text="${fornecedor.cnpjFornecedor}">00.000.000/0000-00</td>
+                        <td th:text="${fornecedor.enderecoFornecedor}">Endereco</td>
+                        <td th:text="${fornecedor.telefoneFornecedor}">Telefone</td>
+                        <td th:text="${fornecedor.cidadeFornecedor}">Cidade</td>
+                        <td>
+                            <div class="d-flex flex-wrap gap-2">
+                                <a th:href="@{/fornecedores/editar/{id}(id=${fornecedor.idFornecedor})}" class="btn-action btn-edit">
+                                    <i class="bi bi-pencil"></i>
+                                    Editar
+                                </a>
+                                <a th:href="@{/fornecedores/excluir/{id}(id=${fornecedor.idFornecedor})}"
+                                   class="btn-action btn-delete"
+                                   onclick="return confirm('Tem certeza que deseja excluir este fornecedor?');">
+                                    <i class="bi bi-trash"></i>
+                                    Excluir
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="empty-state" th:if="${fornecedores.isEmpty()}">
+            <i class="bi bi-inbox fs-1 d-block mb-3"></i>
+            <h2 class="h4">Nenhum fornecedor cadastrado</h2>
+            <p>Cadastre o primeiro fornecedor para comecar.</p>
+            <a th:href="@{/fornecedores/criar}" class="btn-add">
+                <i class="bi bi-plus-circle"></i>
+                Criar fornecedor
+            </a>
+        </div>
+    </section>
 
-<a th:href="@{/tabajara}" class="back-btn">⬅ Voltar para o painel</a>
+    <div class="text-center mt-4">
+        <a th:href="@{/home}" class="btn-back">
+            <i class="bi bi-arrow-left"></i>
+            Voltar ao painel
+        </a>
+    </div>
+</main>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

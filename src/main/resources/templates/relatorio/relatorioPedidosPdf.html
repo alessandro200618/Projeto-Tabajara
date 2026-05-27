@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Relatorio de Pedidos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            color: #111827;
+            font-size: 12px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #111827;
+            margin-bottom: 24px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #111827;
+            color: #ffffff;
+            text-align: left;
+        }
+
+        th,
+        td {
+            border: 1px solid #d1d5db;
+            padding: 8px;
+        }
+
+        .total {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Relatorio de Pedidos</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Cliente</th>
+                <th>Data</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="pedido : ${pedidos}">
+                <td th:text="${pedido.idPedido}">1</td>
+                <td th:text="${pedido.usuario != null ? pedido.usuario.nomeUsuario : 'Sem cliente'}">Cliente</td>
+                <td th:text="${pedido.dataPedido != null ? pedido.dataPedido : '-'}">2026-01-01</td>
+                <td class="total" th:text="${pedido.valorTotalPedido != null ? 'R$ ' + #numbers.formatDecimal(pedido.valorTotalPedido, 1, 2) : 'R$ 0,00'}">R$ 0,00</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
