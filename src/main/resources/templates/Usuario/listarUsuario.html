@@ -248,11 +248,11 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">
+        <a class="navbar-brand" th:href="@{/home}">
             <i class="bi bi-soccer me-2"></i> Santos FC
         </a>
         <div class="navbar-nav ms-auto">
-            <a class="nav-link" href="/">Dashboard</a>
+            <a class="nav-link" th:href="@{/home}">Dashboard</a>
         </div>
     </div>
 </nav>
@@ -339,7 +339,7 @@
 
     <!-- BOTÃO VOLTAR -->
     <div class="text-center mt-4 fade-in" style="animation-delay: 0.4s;">
-        <a href="/" class="btn-back">
+        <a th:href="@{/home}" class="btn-back">
             <i class="bi bi-arrow-left"></i>
             Voltar ao Dashboard
         </a>
